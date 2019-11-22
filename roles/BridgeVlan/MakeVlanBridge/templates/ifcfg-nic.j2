@@ -1,0 +1,9 @@
+VLAN=yes
+TYPE=vlan
+PHYSDEV={{ nic }}
+VLAN_ID={{ item }}
+NAME={{ nic }}.{{ item }}
+ONBOOT=yes
+ZONE=trusted
+DEVICE={{ nic }}.{{ item }}
+BRIDGE=brvlan-{{ item }}

@@ -1,0 +1,36 @@
+- name: 设置{{ nic }}为static
+  lineinfile:
+    dest: "{{ dest_path }}ifcfg-{{ nic }}"
+    regexp: "BOOTPROTO=*dhcp*"
+    line: BOOTPROTO="static"
+
+- name: 创建vlan接口
+  shell: "echo 'vconfig add {{ nic }} {{ item }}'"
+  with_items: "{{ vlans }}"
+
+- name: 保存vlan接口文件
+  template: 
+    src: ifcfg-nic.j2
+    dest: "{{ dest_path }}ifcfg-{{ nic}}.{{ item }}"
+  with_items: "{{ vlans }}"
+  
+- name: 创建vlan网桥
+  shell: "echo 'brctl addbr brvlan-{{ item }}'"
+  with_items: "{{ vlans }}"
+
+- name: 保存网桥文件
+  template: 
+    src: ifcfg-brvlan.j2
+    dest: "{{ dest_path }}ifcfg-brvlan-{{ item }}"
+  with_items: "{{ vlans }}"
+  
+- name: 将vlan接口与网桥绑定
+  shell: "echo 'brctl addif brvlan-{{ item }} {{ nic }}.{{ item }}'"
+  with_items: "{{ vlans }}"
+
+#- name: 重启network服务
+#  systemd:
+#    name: network
+#    state: restarted
+#    daemon_reload: yes
+#    enabled: yes  

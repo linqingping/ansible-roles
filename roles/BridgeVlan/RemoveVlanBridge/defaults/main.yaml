@@ -1,0 +1,3 @@
+vlans: [10,20,30]
+nic: eno2
+dest_path: /tmp/

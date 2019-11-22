@@ -1,0 +1,31 @@
+- name: 将vlan接口与网桥解除绑定
+  shell: "echo 'brctl delif brvlan-{{ item }} {{ nic }}.{{ item }}'"
+  with_items: "{{ vlans }}"
+
+- name: 删除vlan接口
+  shell: "echo 'vconfig rem {{ nic }}.{{ item }}'"
+  with_items: "{{ vlans }}"
+
+- name: 删除vlan接口文件
+  file: 
+    path: "{{ dest_path }}ifcfg-{{ nic}}.{{ item }}"
+    state: absent
+  with_items: "{{ vlans }}"
+  
+- name: 删除vlan网桥
+  shell: "echo 'ifconfig brvlan-{{ item }} down && brctl delbr brvlan-{{ item }}'"
+  with_items: "{{ vlans }}"
+
+- name: 删除网桥文件
+  file: 
+    path: "{{ dest_path }}ifcfg-brvlan-{{ item }}"
+    state: absent
+  with_items: "{{ vlans }}"
+  
+
+#- name: 重启network服务
+#  systemd:
+#    name: network
+#    state: restarted
+#    daemon_reload: yes
+#    enabled: yes  

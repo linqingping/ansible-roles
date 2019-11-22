@@ -1,0 +1,5 @@
+- hosts: dest
+  roles: 
+    #- role: BridgeVlan/Install-vconfig
+    #- role: BridgeVlan/MakeVlanBridge
+    - role: BridgeVlan/RemoveVlanBridge

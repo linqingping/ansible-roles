@@ -1,0 +1,8 @@
+- name: Copy rpm file to server
+  copy:
+      src: vconfig-1.9-16.el7.x86_64.rpm
+      dest: /tmp/vconfig-1.9-16.el7.x86_64.rpm
+- name: Install vconfig-1.9-16.el7.x86_64.rpm
+  yum:
+     name: /tmp/vconfig-1.9-16.el7.x86_64.rpm
+     state: present   
